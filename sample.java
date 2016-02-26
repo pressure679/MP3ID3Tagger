@@ -9,7 +9,6 @@ import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.InvalidDataException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class sample {
 	public static void main(String[] args) {
