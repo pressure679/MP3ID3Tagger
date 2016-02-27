@@ -1,8 +1,9 @@
 import java.io.File;
 import java.io.IOException;
 import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.mpatric.mp3agic.NotSupportedException;
@@ -28,39 +29,28 @@ public class sample {
 			// iterate artists
 			for (String artistsIterator : artistsBuffer) {
 				musicBuffer = getMusic(new File(musicDir + "/" + artistsIterator));
-				System.out.println("-\tartistsIterator: " + artistsIterator);
 				
 				// edit mp3 files from artists
 				if (musicBuffer != null) {
 					for (String musicIterator : musicBuffer) {
 						editMusic(musicDir, artistsIterator, "", musicIterator);
-						System.out.println("-\t-\tmusicIterator: " + musicIterator);
-						System.out.println("\t-\teditMusic: " + musicDir + " " + artistsIterator + " " + musicIterator);
 					}
 
 					// gets albums from artists
 					albumsBuffer = getDir(new File(artistsIterator));
-					System.out.println("\t-\tgetDir: " + artistsIterator);
 
 					// edits music from an album from an arist
 					if (albumsBuffer != null) {
 						for (String albumsIterator : albumsBuffer) {
-							musicBuffer = getMusic(new File(albumsIterator)); // doesn't get music in Fetty Wap - Deluxe
-							System.out.println("\t-\t-\tgetMusic: " + albumsIterator);
-							for (String s : musicBuffer) {
-								System.out.println("\t-\t-\t" + s);
-							}
+							musicBuffer = getMusic(new File(albumsIterator));
 							if (musicBuffer != null) {
 								for (String musicIterator : musicBuffer) {
-									System.out.println("\t-\t-\t-\tmusicIterator: " + musicIterator);
 									editMusic(musicDir, artistsIterator, albumsIterator, musicIterator);
-									System.out.println("\t-\t-\t-\teditMusic: " + musicDir + " " + artistsIterator + " " + musicIterator);
 								}
 							}
 						}
 					}
 				}
-				System.out.println();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -103,10 +93,7 @@ public class sample {
 		int counter = -1;
 		if (dir.list() != null) {
 			for (String music : dir.list()) {
-				//if (dir.isFile()) {
-				System.out.println("\tgetMusic() music: " + music);
 				musicList.add(music);
-				//}
 			}
 			musicIterator = musicList.iterator();
 		}
@@ -124,35 +111,55 @@ public class sample {
 
 	public static void editMusic(String dir, String artist, String album, String file) throws IOException, UnsupportedTagException, NotSupportedException, InvalidDataException {
 		Mp3File mp3File;
-		ID3v2 id3v2Tag = new ID3v24Tag();
+		ID3v1 id3v1Tag;
+		ID3v2 id3v2Tag;
 		if (!file.substring(file.length() - 3, file.length()).equals("mp3")) {
 				return;
 		}
 		artist = artist.split("/")[4];
 		album = album.split("/")[5];
-		System.out.println(dir);
-		System.out.println(artist);
-		System.out.println(album);
-		System.out.println(file);
-		if (album == "") {
+		System.out.println(dir + "/" + artist + "/" + album + "/" + file);
+		if (album.equals("")) {
 			mp3File = new Mp3File(dir + "/" + artist + "/" + file);
 		} else {
 			mp3File = new Mp3File(dir + "/" + artist + "/" + album + "/" + file);
 		}
-
+		
 		if (mp3File.hasId3v1Tag()) {
-			mp3File.removeId3v1Tag();
+			// mp3File.removeId3v1Tag();
+			// System.out.println("id3v1 edited");
+			id3v1Tag = mp3File.getId3v1Tag();
+		} else {
+			id3v1Tag = new ID3v1Tag();
 		}
+		mp3File.setId3v1Tag(id3v1Tag);
+		id3v1Tag.setArtist(artist);
+		id3v1Tag.setAlbum(album);
+		if ((file.substring(file.length() - 3, file.length())).equals("mp3")) {
+			id3v1Tag.setTitle(file.substring(0, file.length() - 4));
+		} else {
+			id3v1Tag.setTitle(file);
+		}
+		
 		if (mp3File.hasId3v2Tag()) {
-			mp3File.removeId3v2Tag();
+			// mp3File.removeId3v2Tag();
+			// System.out.println("id3v2 edited");
+			id3v2Tag = mp3File.getId3v2Tag();
+		} else {
+			id3v2Tag = new ID3v24Tag();
 		}
+		mp3File.setId3v2Tag(id3v2Tag);
+		id3v2Tag.setArtist(artist);
+		id3v2Tag.setAlbum(album);
+		if ((file.substring(file.length() - 3, file.length())).equals("mp3")) {
+			id3v2Tag.setTitle(file.substring(0, file.length() - 4));
+		} else {
+			id3v2Tag.setTitle(file);
+		}
+		
 		if (mp3File.hasCustomTag()) {
 			mp3File.removeCustomTag();
 		}
-
-		id3v2Tag.setArtist(artist);
-		id3v2Tag.setAlbum(album);
-		id3v2Tag.setTitle(file);
 
 		if (album.equals("")) {
 			mp3File.save(dir + "/" + artist + "/" + file);
@@ -161,6 +168,5 @@ public class sample {
 			mp3File.save(dir + "/" + artist + "/" + album + "/" + file);
 			System.out.println("saved " + dir + "/" + artist + "/" + album + "/" +  file);
 		}
-		System.out.println("saved " + file);
 	}
 }
