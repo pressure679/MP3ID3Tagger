@@ -23,5 +23,3 @@ How to compile and run:
 
 - Run
   java -cp . sample
-
-Music stutters when it is edited with mp3agic.
