@@ -112,36 +112,19 @@ public class sample {
 		}
 		
 		if (mp3File.hasId3v1Tag()) {
-			if (mp3File.getId3v1Tag().getArtist() != artist) {
-				mp3File.getId3v1Tag().setArtist(artist);
-			}
-			if (!album.equals("")) {
-				if (mp3File.getId3v1Tag().getAlbum() != artist) {
-				mp3File.getId3v1Tag().setAlbum(album);
-				}
-			}
-			if (mp3File.getId3v1Tag().getTitle() != file) {
-				mp3File.getId3v1Tag().setTitle(file);
-			}
-		} else if (mp3File.hasId3v2Tag()) {
-			if (mp3File.getId3v2Tag().getArtist() != artist) {
-				mp3File.getId3v2Tag().setArtist(artist);
-			}
-			if (album != "") {
-				if (mp3File.getId3v2Tag().getAlbum() != artist) {
-					mp3File.getId3v2Tag().setAlbum(album);
-				}
-			}
-			if (mp3File.getId3v2Tag().getTitle() != file) {
-				mp3File.getId3v2Tag().setTitle(file);
-			}
-		} else {
-			mp3File.getId3v1Tag().setArtist(artist);
-			if (!album.equals("")) {
-				mp3File.getId3v1Tag().setAlbum(album);
-			}
-			mp3File.getId3v1Tag().setTitle(file);
-		}	
+		  mp3File.removeId3v1Tag();
+		}
+		if (mp3File.hasId3v2Tag()) {
+		  mp3File.removeId3v2Tag();
+		}
+		if (mp3File.hasCustomTag()) {
+		  mp3File.removeCustomTag();
+		}
+		ID3v1 id3v1Tag = new ID3v1Tag();
+		id3v1Tag.setArtist(artist);
+		id3v1Tag.setAlbum(album);
+		id3v1Tag.setTitle(file);
+		mp3File.setId3v1Tag(id3v1Tag);
 		
 		if (album.equals("")) {
 			mp3File.save(dir + "/" + artist + "/" + file + ".mp3");
