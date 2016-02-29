@@ -28,28 +28,35 @@ public class sample {
 			// iterate artists
 			for (String artistsIterator : artistsBuffer) {
 				musicBuffer = getMusic(new File(musicDir + "/" + artistsIterator));
-				
+				System.out.println("artist:\t" + artistsIterator);
 				// edit mp3 files from artists
-				if (musicBuffer != null) {
-					for (String musicIterator : musicBuffer) {
-						editMusic(musicDir, artistsIterator, "", musicIterator);
+				for (String musicIterator : musicBuffer) {
+					if (!musicIterator.substring(musicIterator.length() - 4, musicIterator.length()).equals(".mp3")) {
+						continue;
 					}
+					editMusic(musicDir, artistsIterator, "", musicIterator);
+					System.out.println("title:\t" + musicIterator.substring(0, musicIterator.length() - 4));
+				}
 
-					// gets albums from artists
-					albumsBuffer = getDir(new File(artistsIterator));
-
-					// edits music from an album from an arist
-					if (albumsBuffer != null) {
-						for (String albumsIterator : albumsBuffer) {
-							musicBuffer = getMusic(new File(albumsIterator));
-							if (musicBuffer != null) {
-								for (String musicIterator : musicBuffer) {
-									editMusic(musicDir, artistsIterator, albumsIterator, musicIterator);
-								}
+				// gets albums from artists
+				albumsBuffer = getDir(new File(artistsIterator));
+				// edits music from an album from an arist
+				if (albumsBuffer != null) {
+					for (String albumsIterator : albumsBuffer) {
+						musicBuffer = getMusic(new File(albumsIterator));
+						System.out.println("album:\t" + albumsIterator);
+						if (musicBuffer != null) {
+							for (String musicIterator : musicBuffer) {
+								if (!musicIterator.substring(musicIterator.length() - 4, musicIterator.length()).equals(".mp3")) {
+									continue;
+								}	
+								editMusic(musicDir, artistsIterator, albumsIterator, musicIterator);
+								System.out.println("title:\t" + musicIterator.substring(0, musicIterator.length() - 4));
 							}
 						}
 					}
 				}
+				System.out.println();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -63,44 +70,28 @@ public class sample {
 	}
 
 	public static String[] getDir(File dir) { // gets directories
-		List<File> albumList = new ArrayList<File>();
-		Iterator<File> albumIterator = null;
+		List<String> albumList = new ArrayList<String>();
 		String[] buffer;
-		int counter = -1;
 		if (dir.listFiles() != null) {
 			for (File albums : dir.listFiles()) {
-				if (!albums.isFile()) {
-					albumList.add(albums);
+				if (albums.isDirectory()) {
+					albumList.add(albums.getName());
 				}
 			}
-			albumIterator = albumList.iterator();
 		}
 		buffer = new String[albumList.size()];
-		if (albumIterator != null) {
-			while (albumIterator.hasNext()) {
-				counter++;
-				buffer[counter] = albumIterator.next().toString();
-			}
-		}
+		albumList.toArray(buffer);
 		return buffer;
 	}
 
 	public static String[] getMusic(File dir) { // gets .mp3 files
 		List<String> musicList = new ArrayList<String>();
-		Iterator<String> musicIterator = null;
 		String[] buffer;
-		int counter = -1;
-		if (dir.list() != null) {
-			for (String music : dir.list()) {
-				musicList.add(music);
-			}
-			musicIterator = musicList.iterator();
-		}
-		buffer = new String[musicList.size()];
-		if (musicIterator != null) {
-			while (musicIterator.hasNext()) {
-				counter++;
-				buffer[counter] = musicIterator.next();
+		if (dir.listFiles() != null) {
+			for (File music : dir.listFiles()) {
+				if (music.isFile()) {
+					musicList.add(music.getName());
+				}
 			}
 		}
 		buffer = new String[musicList.size()];
@@ -115,8 +106,9 @@ public class sample {
 		if (!file.substring(file.length() - 3, file.length()).equals("mp3")) {
 				return;
 		}
-		artist = artist.split("/")[4];
-		album = album.split("/")[5];
+		/* System.out.println("artist: " + artist);
+		System.out.println("album: " + album);
+		System.out.println("title: " + file.substring(0, file.length() - 4) + "\n"); */
 		if (album.equals("")) {
 			mp3File = new Mp3File(dir + "/" + artist + "/" + file);
 		} else {
@@ -124,10 +116,8 @@ public class sample {
 		}
 		
 		if (mp3File.hasId3v1Tag()) {
-			System.out.println("id3v1 tag");
 			id3v1Tag = mp3File.getId3v1Tag();
 		} else if (mp3File.hasId3v2Tag()) {
-			System.out.println("id3v2 tag");
 			id3v2Tag = mp3File.getId3v2Tag();
 			id3v2Tag.setArtist(artist);
 			id3v2Tag.setAlbum(album);
