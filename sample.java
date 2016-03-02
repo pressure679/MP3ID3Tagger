@@ -4,7 +4,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v23Tag;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.InvalidDataException;
@@ -113,27 +113,15 @@ public class sample {
 		
 		if (mp3File.hasId3v1Tag()) {
 			ID3v1 id3v1Tag = new ID3v1Tag();
-			if (!mp3File.getId3v1Tag().getArtist().equals(artist)) {
-				id3v1Tag.setArtist(artist);
-			}
-			if (!album.equals("") && mp3File.getId3v1Tag().equals(album)) {
-				id3v1Tag.setAlbum(album);
-			}
-			if (!mp3File.getId3v1Tag().getTitle().equals(file)) {
-				id3v1Tag.setTitle(file);
-			}
+			id3v1Tag.setArtist(artist);
+			id3v1Tag.setAlbum(album);
+			id3v1Tag.setTitle(file);
 			mp3File.setId3v1Tag(id3v1Tag);
 		} else if (mp3File.hasId3v2Tag()) {
-			ID3v2 id3v2Tag = new ID3v23Tag();
-			if (!mp3File.getId3v2Tag().getArtist().equals(artist)) {
-				id3v2Tag.setArtist(artist);
-			}
-			if (!album.equals("") && mp3File.getId3v1Tag().equals(album)) {
-				id3v2Tag.setAlbum(album);
-			}
-			if (!mp3File.getId3v2Tag().getTitle().equals(file)) {
-				id3v2Tag.setTitle(file);
-			}
+			ID3v2 id3v2Tag = new ID3v24Tag();
+			id3v2Tag.setArtist(artist);
+			id3v2Tag.setAlbum(album);
+			id3v2Tag.setTitle(file);
 			mp3File.setId3v2Tag(id3v2Tag);
 		}
 		/* if (mp3File.hasCustomTag()) {
