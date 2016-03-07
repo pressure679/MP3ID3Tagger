@@ -22,10 +22,10 @@ In Ubuntu or another linux-based operating system the CLASSPATH should be as fol
 
 How to compile and run:
 - Compile
-  javac sample.java
+  - javac sample.java
 
 - Run
-  java -cp . sample
+  - java -cp . sample
 
 # Golang version
 Depends on https://github.com/wtolson/go-taglib - See installation in that repository.
@@ -39,7 +39,7 @@ Also, in this version the directory tree has to be like this:
   - or for non-album tracks
   - /home/User/Music/Genre/Artist//Song
 - Compile
-  go build sample.go
+  - go build sample.go
 
 - Run
-  ./sample
+  - ./sample
