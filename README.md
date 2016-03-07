@@ -1,4 +1,7 @@
 # MP3ID3Tagger
+
+# Java version
+- MP3 files stutter when tagged with this version, probably cause it detects id3v2 version and only set tags in one of the id3v2 versions. Golang version detects id3v# and set the tags to that version automatically.
 Some code to tag mp3 files with artist, album and title using directories' and file's name.
 You directory and file setup should be one of the following, depending if the track is a non-album track or not (for Windows HOME is C:\Users\<username>, and on Ubuntu and other linux-based operating system, /home/<username>):
 The file can be run from any directory, it looks up the Music directory by looking up the HOME environment variable.
@@ -23,3 +26,20 @@ How to compile and run:
 
 - Run
   java -cp . sample
+
+# Golang version
+Depends on https://github.com/wtolson/go-taglib - See installation in that repository.
+Also, in this version the directory tree has to be like this:
+- Windows
+  C:\Users\<User>\Music\<Genre>\<Artist>\<Song/Album>\<Song>
+  or for non-album tracks
+  C:\Users\<User>\Music\<Genre>\<Artist>\<Song>
+- Ubuntu
+  /home/<User>\Music\<Genre>\<Artist>\<Song/Album>\<Song>
+  or for non-album tracks
+  /home/<User>\Music\<Genre>\<Artist>\<Song>
+- Compile
+  go build sample.go
+
+- Run
+  ./sample
