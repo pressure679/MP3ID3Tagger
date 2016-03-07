@@ -31,9 +31,9 @@ How to compile and run:
 Depends on https://github.com/wtolson/go-taglib - See installation in that repository.
 Also, in this version the directory tree has to be like this:
 - Windows
-  - C:\Users\\<User>\Music\\<Genre>\\<Artist>\\<Song/Album>\\<Song>
+  - C:\Users\ <User>\Music\ <Genre>\ <Artist>\ <Song/Album>\ <Song>
   - or for non-album tracks
-  - C:\Users\\<User>\Music\\<Genre>\\<Artist>\\<Song>
+  - C:\Users\ <User>\Music\ <Genre>\ <Artist>\ <Song>
 - Ubuntu
   - /home/<User>/Music/<Genre>/<Artist>/<Song/Album>/<Song>
   - or for non-album tracks
